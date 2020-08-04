@@ -1,6 +1,8 @@
 import React from 'react';
-import { VideoCardGroupContainer, VideoCardList, Title, ExtraLink } from './styles';
+import { VideoCardGroupContainer, Title, ExtraLink } from './styles';
 import VideoCard from './components/VideoCard';
+import Slider from '../Slider'
+import SliderItem from '../Slider'
 
 function VideoCardGroup({
   ignoreFirstVideo,
@@ -24,23 +26,29 @@ function VideoCardGroup({
           }
         </>
       )}
-      <VideoCardList>
-        {videos.map((video, index) => {
+      <Slider>
+        {videos.map((video, index) => {   
           if (ignoreFirstVideo && index === 0) {
             return null;
           }
-
-          return (
-            <li key={video.titulo}>
-              <VideoCard
-                videoTitle={video.titulo}
-                videoURL={video.url}
-                categoryColor={categoryColor}
-              />
-            </li>
-          );
+          if(index<videos.length-4){
+            return false;
+          }
+          else{
+          console.log(index, videos.length)
+            return (
+              <SliderItem key={video.titulo}>
+                <VideoCard
+                  videoTitle={video.titulo}
+                  videoURL={video.url}
+                  categoryColor={categoryColor}
+                />
+              </SliderItem>
+            );
+          }
         })}
-      </VideoCardList>
+      
+      </Slider>
     </VideoCardGroupContainer>
   );
 }
