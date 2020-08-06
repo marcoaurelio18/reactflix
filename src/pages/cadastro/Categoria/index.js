@@ -1,67 +1,38 @@
 import React, { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import PageDefault from '../../../components/PageDefault'
 import FormField from '../../../components/FormField'
 import Button from '../../../components/Button'
-import { Link } from 'react-router-dom'
+import useForm from '../../../hooks/useForm'
 
 function CadastroCategoria() {
 
     const valoresIniciais = {
-        nome: '',
+        titulo: '',
         descricao: '',
         cor: '',
     }
 
+    const { handleChange, values, clearForm } = useForm(valoresIniciais)
+
     const [categorias, setCategorias] = useState([])
-    const [values, setValues] = useState(valoresIniciais);
-    
-    
-
-    function setValue(chave, valor) {
-        setValues({
-            ...values,
-            [chave]: valor,
-        })
-    }
-
-    function handleChange(infosDoEvento){
-        setValue(
-            infosDoEvento.target.getAttribute('name'),
-            infosDoEvento.target.value
-        );
-    }
 
     useEffect(() => {
         console.log("adfasfa");
-        const URL = 'http://localhost:8080/categorias';
+        const URL = window.location.hostname.includes('localhost')?
+        'http://localhost:8080/categorias':
+        'http://domflix.herokuapp.com/categorias';
         fetch(URL).then(async (response) => {
             const resposta = await response.json();
             setCategorias([ 
                 ...resposta,
             ]);
         });
-        /*setTimeout(() => {
-            setCategorias([
-            ...categorias,
-            {
-                "id": 1,
-                "nome": "Front end",
-                "descricao": "Uma categoria bacanuda",
-                "cor": "#cbd1ff"
-            },
-            {
-                "id": 2,
-                "nome": "Back end",
-                "descricao": "Outra categoria bacanuda",
-                "cor": "#cbd1ff"
-            }
-        ]);
-    }, 4 * 1000);*/
     }, []);
 
     return (
         <PageDefault>
-            <h1>Cadastro de Categoria: { values.nome } </h1>
+            <h1>Cadastro de Categoria: { values.titulo } </h1>
 
             <form onSubmit={function handleSubmit(infosDoEvento){
                 infosDoEvento.preventDefault();
@@ -70,14 +41,13 @@ function CadastroCategoria() {
                     values
                 ]);
 
-                setValues(valoresIniciais);
+                clearForm(valoresIniciais);
             }}>
 
                 <FormField 
-                    label="Nome"
-                    type="text"
-                    name="nome"
-                    value = { values.nome }
+                    label="Titulo"
+                    name="titulo"
+                    value = { values.titulo }
                     onChange = { handleChange }
                 />
 
@@ -109,8 +79,8 @@ function CadastroCategoria() {
             <ul>
                 {categorias.map((categoria, indice) => {
                     return (
-                        <li key={`${categoria.nome}${indice}`}>
-                            {categoria.nome}
+                        <li key={`${categoria.titulo}${indice}`}>
+                            {categoria.titulo}
                         </li>
                     )
                 })}
